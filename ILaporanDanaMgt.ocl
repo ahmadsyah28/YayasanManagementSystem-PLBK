@@ -1,0 +1,29 @@
+-- addLaporanDana(...)
+context ILaporanDanaMgt::addLaporanDana(date: Date, totalIncome: Double, totalExpenditure: Double, totalBalance: Double): Boolean
+pre:
+  not date.oclIsUndefined() and totalIncome >= 0 and totalExpenditure >= 0 and totalBalance = totalIncome - totalExpenditure
+post:
+  LaporanDana->exists(ld | ld.Tanggal = date and ld.totalPemasukan = totalIncome and ld.totalPengeluaran = totalExpenditure and ld.totalSaldo = totalBalance)
+
+
+-- updateLaporanDana(...)
+context ILaporanDanaMgt::updateLaporanDana(date: Date, newTotalIncome: Double, newTotalExpenditure: Double, newTotalBalance: Double): Boolean
+pre:
+  LaporanDana->exists(ld | ld.Tanggal = date) and newTotalIncome >= 0 and newTotalExpenditure >= 0 and newTotalBalance = newTotalIncome - newTotalExpenditure
+post:
+  LaporanDana->exists(ld | ld.Tanggal = date and ld.totalPemasukan = newTotalIncome and ld.totalPengeluaran = newTotalExpenditure and ld.totalSaldo = newTotalBalance)
+
+
+--  deleteLaporanDana(...)
+context ILaporanDanaMgt::deleteLaporanDana(date: Date): Boolean
+pre:
+  LaporanDana->exists(ld | ld.Tanggal = date)
+post:
+  not LaporanDana->exists(ld | ld.Tanggal = date)
+
+
+-- getAllLaporanDana()
+context ILaporanDanaMgt
+inv: tersedia = laporanDana->notEmpty()
+
+

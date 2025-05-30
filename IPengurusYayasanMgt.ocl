@@ -1,0 +1,33 @@
+-- addDonation(donorName: String, amount: Double, date: Date)
+context IPengurusYayasanMgt::addDonation(donorName: String, amount: Double, date: Date)
+pre:
+  not donorName.oclIsUndefined() and donorName <> '' and amount > 0 and not date.oclIsUndefined()
+post:
+  Donatur->exists(d | d.name = donorName) and
+  LaporanDana->exists(ld | ld.date = date and ld.amount = amount and ld.source = donorName)
+
+-- viewDonorInformation(): List<Donor>
+context IPengurusYayasanMgt::viewDonorInformation(): List<Donor>
+pre:
+  self.username <> '' and self.password <> ''
+post:
+  result->forAll(d | not d.name.oclIsUndefined() and d.name <> '')
+
+
+-- allocateFunds(purpose: String, amount: Double, date: Date)
+context IPengurusYayasanMgt::allocateFunds(purpose: String, amount: Double, date: Date)
+pre:
+  not purpose.oclIsUndefined() and purpose <> '' and amount > 0 and not date.oclIsUndefined()
+post:
+  LaporanDana->exists(ld | ld.date = date and ld.amount = amount and ld.purpose = purpose)
+
+
+
+-- viewFinancialReport(): List<FundReport>
+context IPengurusYayasanMgt::viewFinancialReport(): List<FundReport>
+pre:
+  self.username <> '' and self.password <> ''
+post:
+  result->notEmpty()
+
+

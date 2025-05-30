@@ -1,0 +1,32 @@
+-- addPengurus
+context IKetuaYayasanMgt::addPengurus(name: String, posisi: String, username: String, password: String): Boolean
+pre:
+  not name.oclIsUndefined() and not posisi.oclIsUndefined() and
+  not username.oclIsUndefined() and not password.oclIsUndefined() and
+  not KetuaYayasan->exists(k | k.username = username) -- username harus unik
+
+post:
+  KetuaYayasan->exists(k | k.nama = name and k.posisi = posisi and k.username = username and k.password = password)
+
+
+-- updatePengurus
+context IKetuaYayasanMgt::updatePengurus(username: String, newName: String, newPosisi: String, newPassword: String): Boolean
+pre:
+  KetuaYayasan->exists(k | k.username = username) and
+  not newName.oclIsUndefined() and not newPosisi.oclIsUndefined() and not newPassword.oclIsUndefined()
+
+post:
+  KetuaYayasan->exists(k | k.username = username and k.nama = newName and k.posisi = newPosisi and k.password = newPassword)
+
+-- deletePengurus
+context IKetuaYayasanMgt::deletePengurus(username: String): Boolean
+pre:
+  KetuaYayasan->exists(k | k.username = username)
+
+post:
+  not KetuaYayasan->exists(k | k.username = username)
+
+
+-- getAllPengurus()
+context IKetuaYayasanMgt
+inv: self.getAllPengurus()->forAll(k | pengurus->includes(k))
